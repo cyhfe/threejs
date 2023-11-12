@@ -100,5 +100,5 @@ certbot 自动配置 https
 
 ```bash
 sudo certbot --nginx
-
+sudo certbot renew --dry-run
 ```
