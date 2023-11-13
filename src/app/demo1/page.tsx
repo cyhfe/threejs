@@ -15,21 +15,36 @@ export default function Demo() {
     const { width: w, height: h } =
       containerRef.current.getBoundingClientRect();
 
-    console.log(w, h);
-
+    // scene
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
-    camera.position.z = 5;
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(w, h);
-    containerRef.current.appendChild(renderer.domElement);
 
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
+    // meshes
+    // cube
+    const cubeGeometry = new THREE.BoxGeometry();
+    const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff });
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     scene.add(cube);
 
-    // Add this function inside the useEffect hook
+    // camera
+    const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
+    // camera.position.x = -3;
+    camera.position.z = 8;
+    // camera.position.y = 2;
+
+    // light
+    scene.add(new THREE.AmbientLight(0x666666));
+    const dirLight = new THREE.DirectionalLight(0xaaaaaa);
+    dirLight.position.set(5, 12, 8);
+    dirLight.castShadow = true;
+    dirLight.intensity = 1;
+    scene.add(dirLight);
+
+    // renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(w, h);
+    renderer.setClearColor(0xffffff);
+    containerRef.current.appendChild(renderer.domElement);
+
     const renderScene = () => {
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
@@ -37,10 +52,9 @@ export default function Demo() {
       renderer.render(scene, camera);
       requestAnimationFrame(renderScene);
     };
-    // Call the renderScene function to start the animation loop
+
     renderScene();
 
-    // Add this inside the useEffect hook
     return () => {};
   }, []);
 
