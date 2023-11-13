@@ -15,9 +15,27 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const links = [
+    { href: "/", label: "note" },
+    { href: "/demo1", label: "demo1" },
+    { href: "/demo2", label: "demo2" },
+  ];
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className="h-full">
+      <body className={inter.className + " h-full"}>
+        <div className="flex h-full">
+          <div className="bg-gray-200 w-44">
+            {links.map((link) => {
+              return (
+                <div key={link.href}>
+                  <Link href={link.href}>{link.label}</Link>
+                </div>
+              );
+            })}
+          </div>
+          <div className="w-full h-full">{children}</div>
+        </div>
+      </body>
     </html>
   );
 }
