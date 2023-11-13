@@ -23,7 +23,19 @@ export default function Demo() {
     const cubeGeometry = new THREE.BoxGeometry();
     const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff });
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.castShadow = true;
     scene.add(cube);
+
+    //groundGeometry
+    const groundGeometry = new THREE.PlaneGeometry(10000, 10000);
+    const groundMaterial = new THREE.MeshLambertMaterial({
+      color: 0xffffff,
+    });
+    const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+    groundMesh.position.set(0, -2, 0);
+    groundMesh.rotation.set(Math.PI / -2, 0, 0);
+    groundMesh.receiveShadow = true;
+    scene.add(groundMesh);
 
     // camera
     const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
