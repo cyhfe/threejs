@@ -121,8 +121,9 @@ export default function Demo() {
       renderer.setSize(w, h);
     }
 
+    let rafId: number;
     const animate = () => {
-      requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
       cube.rotation.x += props.speed;
       cube.rotation.y += props.speed;
 
@@ -142,6 +143,7 @@ export default function Demo() {
       container.removeChild(renderer.domElement);
       container.removeChild(stats.dom);
       window.removeEventListener("resize", onWindowResize);
+      rafId && cancelAnimationFrame(rafId);
     };
   }, []);
 
