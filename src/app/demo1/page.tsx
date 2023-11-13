@@ -3,6 +3,9 @@
 import React from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import GUI from "lil-gui";
+//@ts-ignore
+import Stats from "three/examples/jsm/libs/stats.module";
 
 export default function Demo() {
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -89,23 +92,47 @@ export default function Demo() {
     controller.minPolarAngle = Math.PI / 4;
     controller.maxPolarAngle = (3 * Math.PI) / 4;
 
+    // add gui
+    const gui = new GUI();
+    const props = {
+      speed: 0.01,
+    };
+
+    gui.add(props, "speed", -0.1, 0.1, 0.01);
+
+    const stats = new Stats();
+    stats.dom.style.position = "absolute";
+    container.appendChild(stats.dom);
+
+    window.addEventListener("resize", onWindowResize, false);
+    function onWindowResize() {
+      if (!container) return;
+      const { width: w, height: h } = container.getBoundingClientRect();
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+
     const animate = () => {
       requestAnimationFrame(animate);
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
+      cube.rotation.x += props.speed;
+      cube.rotation.y += props.speed;
 
-      torusKnotMesh.rotation.x += 0.01;
-      torusKnotMesh.rotation.y += 0.01;
+      torusKnotMesh.rotation.x += props.speed;
+      torusKnotMesh.rotation.y += props.speed;
 
       controller.update();
       renderer.render(scene, camera);
+      stats.update();
     };
     animate();
-    rendered.current = true;
+
     return () => {
       container.removeChild(renderer.domElement);
+      container.removeChild(stats.dom);
+      window.removeEventListener("resize", onWindowResize);
     };
   }, []);
 
-  return <div ref={containerRef} className="w-full h-full" />;
+  return <div ref={containerRef} className="w-full h-full relative" />;
 }
