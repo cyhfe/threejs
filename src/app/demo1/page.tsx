@@ -36,7 +36,7 @@ export default function Demo() {
     const cubeGeometry = new THREE.BoxGeometry();
     const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff });
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.position.x = -1;
+    cube.position.x = -2;
     cube.castShadow = true;
     scene.add(cube);
 
@@ -54,7 +54,10 @@ export default function Demo() {
 
     //groundGeometry
     const groundGeometry = new THREE.PlaneGeometry(10000, 10000);
-    const groundMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+    const groundMaterial = new THREE.MeshLambertMaterial({
+      color: 0xffffff,
+      side: THREE.DoubleSide,
+    });
     const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
     groundMesh.position.set(0, -2, 0);
     groundMesh.rotation.set(Math.PI / -2, 0, 0);
@@ -103,7 +106,7 @@ export default function Demo() {
     controller.minDistance = 3;
     controller.maxDistance = 10;
     controller.minPolarAngle = Math.PI / 4;
-    controller.maxPolarAngle = (3 * Math.PI) / 4;
+    controller.maxPolarAngle = Math.PI / 2;
 
     const stats = new Stats();
     stats.dom.style.position = "absolute";
