@@ -9,7 +9,6 @@ import Stats from "three/examples/jsm/libs/stats.module";
 
 export default function Demo() {
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const rendered = React.useRef(false);
 
   React.useEffect(() => {
     const container = containerRef.current;
@@ -19,7 +18,7 @@ export default function Demo() {
 
     // scene
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0xffffff, 0.0025, 50);
+    scene.fog = new THREE.Fog(0xffffff, 0.0025, 90);
 
     // meshes
     // cube
@@ -58,11 +57,11 @@ export default function Demo() {
     camera.position.y = 2;
 
     // light
-    scene.add(new THREE.AmbientLight("#555555"));
+    scene.add(new THREE.AmbientLight("#8a8a8a"));
     const dirLight = new THREE.DirectionalLight(0xffffff);
     dirLight.position.set(5, 12, 8);
     dirLight.castShadow = true;
-    dirLight.intensity = 1.5;
+    dirLight.intensity = 1.8;
     dirLight.shadow.camera.near = 0.1;
     dirLight.shadow.camera.far = 200;
     dirLight.shadow.camera.right = 10;
