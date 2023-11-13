@@ -9,12 +9,10 @@ export default function Demo() {
   const rendered = React.useRef(false);
 
   React.useEffect(() => {
-    if (!containerRef.current) return;
-    if (rendered.current === true) return;
-    rendered.current = true;
+    const container = containerRef.current;
+    if (!container) return;
 
-    const { width: w, height: h } =
-      containerRef.current.getBoundingClientRect();
+    const { width: w, height: h } = container.getBoundingClientRect();
 
     // scene
     const scene = new THREE.Scene();
@@ -43,9 +41,7 @@ export default function Demo() {
 
     //groundGeometry
     const groundGeometry = new THREE.PlaneGeometry(10000, 10000);
-    const groundMaterial = new THREE.MeshLambertMaterial({
-      color: 0xffffff,
-    });
+    const groundMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
     const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
     groundMesh.position.set(0, -2, 0);
     groundMesh.rotation.set(Math.PI / -2, 0, 0);
@@ -59,11 +55,11 @@ export default function Demo() {
     camera.position.y = 2;
 
     // light
-    scene.add(new THREE.AmbientLight(0x666666));
-    const dirLight = new THREE.DirectionalLight(0xaaaaaa);
+    scene.add(new THREE.AmbientLight("#555555"));
+    const dirLight = new THREE.DirectionalLight(0xffffff);
     dirLight.position.set(5, 12, 8);
     dirLight.castShadow = true;
-    dirLight.intensity = 1;
+    dirLight.intensity = 1.5;
     dirLight.shadow.camera.near = 0.1;
     dirLight.shadow.camera.far = 200;
     dirLight.shadow.camera.right = 10;
@@ -82,26 +78,33 @@ export default function Demo() {
     renderer.shadowMap.type = THREE.VSMShadowMap;
     renderer.setSize(w, h);
     renderer.setClearColor(0xffffff);
-    containerRef.current.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
-    // controls
-    const controls = new OrbitControls(camera, renderer.domElement);
+    // controller
+    const controller = new OrbitControls(camera, renderer.domElement);
+    controller.enableDamping = true;
+    controller.dampingFactor = 0.05;
+    controller.minDistance = 3;
+    controller.maxDistance = 10;
+    controller.minPolarAngle = Math.PI / 4;
+    controller.maxPolarAngle = (3 * Math.PI) / 4;
 
-    const renderScene = () => {
+    const animate = () => {
+      requestAnimationFrame(animate);
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
 
       torusKnotMesh.rotation.x += 0.01;
       torusKnotMesh.rotation.y += 0.01;
 
-      controls.update();
+      controller.update();
       renderer.render(scene, camera);
-      requestAnimationFrame(renderScene);
     };
-
-    renderScene();
-
-    return () => {};
+    animate();
+    rendered.current = true;
+    return () => {
+      container.removeChild(renderer.domElement);
+    };
   }, []);
 
   return <div ref={containerRef} className="w-full h-full" />;
