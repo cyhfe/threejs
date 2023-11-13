@@ -15,6 +15,17 @@ export default function Demo() {
     if (!container) return;
 
     const { width: w, height: h } = container.getBoundingClientRect();
+    //  gui
+    const gui = new GUI();
+    const props = {
+      speed: 0.01,
+      ambientIntensity: 0.9,
+      directionalIntensity: 1.1,
+    };
+
+    gui.add(props, "speed", -0.1, 0.1, 0.01);
+    gui.add(props, "ambientIntensity", 0, 2, 0.1);
+    gui.add(props, "directionalIntensity", 0, 2, 0.1);
 
     // scene
     const scene = new THREE.Scene();
@@ -57,11 +68,14 @@ export default function Demo() {
     camera.position.y = 2;
 
     // light
-    scene.add(new THREE.AmbientLight("#8a8a8a"));
+    const ambientLight = new THREE.AmbientLight(0xffffff);
+    ambientLight.intensity = props.ambientIntensity;
+    scene.add(ambientLight);
+
     const dirLight = new THREE.DirectionalLight(0xffffff);
     dirLight.position.set(5, 12, 8);
     dirLight.castShadow = true;
-    dirLight.intensity = 1.8;
+    dirLight.intensity = props.directionalIntensity;
     dirLight.shadow.camera.near = 0.1;
     dirLight.shadow.camera.far = 200;
     dirLight.shadow.camera.right = 10;
@@ -91,14 +105,6 @@ export default function Demo() {
     controller.minPolarAngle = Math.PI / 4;
     controller.maxPolarAngle = (3 * Math.PI) / 4;
 
-    // add gui
-    const gui = new GUI();
-    const props = {
-      speed: 0.01,
-    };
-
-    gui.add(props, "speed", -0.1, 0.1, 0.01);
-
     const stats = new Stats();
     stats.dom.style.position = "absolute";
     container.appendChild(stats.dom);
@@ -119,6 +125,9 @@ export default function Demo() {
 
       torusKnotMesh.rotation.x += props.speed;
       torusKnotMesh.rotation.y += props.speed;
+
+      ambientLight.intensity = props.ambientIntensity;
+      dirLight.intensity = props.directionalIntensity;
 
       controller.update();
       renderer.render(scene, camera);
