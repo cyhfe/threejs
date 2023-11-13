@@ -128,6 +128,11 @@ jobs:
 
 安装 runner, 配置为服务
 
+```bash
+# error: Must not run with sudo
+export RUNNER_ALLOW_RUNASROOT="1"
+```
+
 ## git push
 
 自动部署完成
