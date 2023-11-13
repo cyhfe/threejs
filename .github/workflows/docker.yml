@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: run docker compose
-      run: docker-compose -p three up --build -d
+      run: docker compose -p three up --build -d
