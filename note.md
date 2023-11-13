@@ -80,7 +80,7 @@ server {
     location / {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_pass http://137.184.121.139:3004;
+        proxy_pass http://137.184.121.139:3005;
     }
 }
 
@@ -102,3 +102,28 @@ certbot 自动配置 https
 sudo certbot --nginx
 sudo certbot renew --dry-run
 ```
+
+## github action
+
+```yml
+name: docker compose
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: run docker compose
+        run: docker-compose -p three up --build -d
+```
+
+## self-hosted runner
+
+安装 runner, 配置为服务
