@@ -127,3 +127,8 @@ jobs:
 ## self-hosted runner
 
 安装 runner, 配置为服务
+
+## git push
+
+自动部署完成
+每次在 main 分支提交自动部署
