@@ -138,7 +138,6 @@ async function init(container: HTMLDivElement) {
     container.removeChild(stats.dom);
     window.removeEventListener("resize", onWindowResize);
     rafId && cancelAnimationFrame(rafId);
-    console.log("clean");
     gui.destroy();
   };
 }
