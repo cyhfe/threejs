@@ -72,6 +72,50 @@ function createArena() {
   return arena;
 }
 
+const createDominos = () => {
+  const getPoints = () => {
+    const points = [];
+    const r = 2.8;
+    const cX = 0;
+    const cY = 0;
+
+    let circleOffset = 0;
+    for (let i = 0; i < 1200; i += 6 + circleOffset) {
+      circleOffset = 1.5 * (i / 360);
+
+      const x = (r / 1440) * (1440 - i) * Math.cos(i * (Math.PI / 180)) + cX;
+      const z = (r / 1440) * (1440 - i) * Math.sin(i * (Math.PI / 180)) + cY;
+      const y = 0;
+
+      points.push(new THREE.Vector3(x, y, z));
+    }
+
+    return points;
+  };
+  const stones = new THREE.Group();
+  stones.name = "dominos";
+  const points = getPoints();
+  points.forEach((point, index) => {
+    const colors = [0x66ff00, 0x6600ff];
+    const stoneGeom = new THREE.BoxGeometry(0.05, 0.5, 0.2);
+    const stone = new THREE.Mesh(
+      stoneGeom,
+      new THREE.MeshStandardMaterial({
+        color: colors[index % colors.length],
+      })
+    );
+    stone.position.copy(point);
+    stone.lookAt(new THREE.Vector3(0, 0, 0));
+
+    stone.position.y = 0.35;
+    stone.castShadow = true;
+    stone.receiveShadow = true;
+
+    stones.add(stone);
+  });
+  return stones;
+};
+
 async function init(container: HTMLDivElement) {
   const width = container.clientWidth;
   const height = container.clientHeight;
@@ -92,6 +136,9 @@ async function init(container: HTMLDivElement) {
   const arena = createArena();
   scene.add(arena);
 
+  const dominos = createDominos();
+  scene.add(dominos);
+
   // camera
   const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
   camera.position.set(6, 6, 6);
@@ -102,13 +149,18 @@ async function init(container: HTMLDivElement) {
   scene.add(ambientLight);
 
   const dirLight = new THREE.DirectionalLight(0xffffff);
+  dirLight.position.set(0, 6, 4);
+  dirLight.castShadow = true;
+
   scene.add(dirLight);
 
   // renderer
   const renderer = new THREE.WebGLRenderer({ antialias: true });
 
   renderer.setSize(width, height);
-  renderer.setClearColor(0xffffff);
+  renderer.setClearColor("#e2e8f0");
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   // controller
   const controller = new OrbitControls(camera, renderer.domElement);

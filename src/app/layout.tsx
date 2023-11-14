@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body className={inter.className + " h-full"}>
         <div className="flex h-full ">
-          <div className="bg-gray-200 w-44 shrink-0	p-4 fixed top-0 bottom-0">
+          <div className="border shadow-inner w-44 shrink-0	p-4 fixed top-0 bottom-0">
             {links.map((link) => {
               return (
                 <div key={link.href}>
