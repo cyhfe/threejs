@@ -27,42 +27,47 @@ function createArena() {
   ground.receiveShadow = true;
   arena.add(ground);
 
-  const borderLeft = new THREE.Mesh(new THREE.BoxGeometry(), groundMaterial);
-  borderLeft.position.x = -3;
+  const borderLeft = new THREE.Mesh(
+    new THREE.BoxGeometry(6, 0.6, 0.2),
+    groundMaterial
+  );
+
+  borderLeft.position.z = 3.1;
   borderLeft.position.y = 0.2;
   borderLeft.castShadow = true;
   borderLeft.receiveShadow = true;
   arena.add(borderLeft);
 
   const borderRight = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2, 0.3, 6),
+    new THREE.BoxGeometry(6, 0.6, 0.2),
     groundMaterial
   );
-  borderRight.position.x = 3;
+
+  borderRight.position.z = -3.1;
   borderRight.position.y = 0.2;
   borderRight.castShadow = true;
   borderRight.receiveShadow = true;
-  // arena.add(borderRight);
+  arena.add(borderRight);
 
   const borderBottom = new THREE.Mesh(
-    new THREE.BoxGeometry(6.4, 0.3, 0.2),
+    new THREE.BoxGeometry(0.2, 0.6, 6.4),
     groundMaterial
   );
-  borderBottom.position.z = 3;
+  borderBottom.position.x = 3.1;
   borderBottom.position.y = 0.2;
   borderBottom.castShadow = true;
   borderBottom.receiveShadow = true;
-  // arena.add(borderBottom);
+  arena.add(borderBottom);
 
   const borderTop = new THREE.Mesh(
-    new THREE.BoxGeometry(6.4, 0.3, 0.2),
+    new THREE.BoxGeometry(0.2, 0.6, 6.4),
     groundMaterial
   );
-  borderTop.position.z = -3;
-  borderTop.position.y = 0.22;
+  borderTop.position.x = -3.1;
+  borderTop.position.y = 0.2;
   borderTop.castShadow = true;
   borderTop.receiveShadow = true;
-  // arena.add(borderTop);
+  arena.add(borderTop);
 
   return arena;
 }
