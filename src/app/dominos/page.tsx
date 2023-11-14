@@ -96,7 +96,7 @@ const createDominos = () => {
   stones.name = "dominos";
   const points = getPoints();
   points.forEach((point, index) => {
-    const colors = [0x66ff00, 0x6600ff];
+    const colors = ["#f8fafc", "#475569"];
     const stoneGeom = new THREE.BoxGeometry(0.05, 0.5, 0.2);
     const stone = new THREE.Mesh(
       stoneGeom,
@@ -129,7 +129,7 @@ async function init(container: HTMLDivElement) {
 
   // physic
   const RAPIER = await import("@dimforge/rapier3d");
-  const gravity = { x: 0.0, y: 0.0, z: 0.0 };
+  const gravity = { x: 0.0, y: -9.81, z: -1 };
   const world = new RAPIER.World(gravity);
 
   // mesh
@@ -148,7 +148,7 @@ async function init(container: HTMLDivElement) {
   const ambientLight = new THREE.AmbientLight(0xffffff);
   scene.add(ambientLight);
 
-  const dirLight = new THREE.DirectionalLight(0xffffff);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
   dirLight.position.set(0, 6, 4);
   dirLight.castShadow = true;
 
@@ -175,9 +175,10 @@ async function init(container: HTMLDivElement) {
 
   let rafId: number | undefined;
   function animate() {
-    renderer.render(scene, camera);
+    world.step();
     controller.update();
     stats.update();
+    renderer.render(scene, camera);
     rafId = requestAnimationFrame(animate);
   }
 
