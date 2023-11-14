@@ -9,7 +9,7 @@ import GUI from "lil-gui";
 //@ts-ignore
 import Stats from "three/examples/jsm/libs/stats.module";
 
-export const visitChildren = (
+const visitChildren = (
   object: THREE.Object3D,
   fn: (object: THREE.Mesh) => void
 ) => {

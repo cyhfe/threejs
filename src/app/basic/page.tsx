@@ -138,6 +138,8 @@ async function init(container: HTMLDivElement) {
     container.removeChild(stats.dom);
     window.removeEventListener("resize", onWindowResize);
     rafId && cancelAnimationFrame(rafId);
+    console.log("clean");
+    gui.destroy();
   };
 }
 
@@ -158,7 +160,7 @@ export default function Demo() {
     return () => {
       typeof cleanup === "function" && cleanup();
     };
-  }, []);
+  });
 
   return <div ref={containerRef} className="w-full h-full relative" />;
 }
