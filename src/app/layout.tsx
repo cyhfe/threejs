@@ -17,8 +17,8 @@ export default function RootLayout({
 }) {
   const links = [
     { href: "/", label: "note" },
-    { href: "/demo1", label: "demo1" },
-    { href: "/demo2", label: "demo2" },
+    { href: "/basic", label: "basic" },
+    { href: "/gltf", label: "gltf" },
   ];
   return (
     <html lang="en" className="h-full">
