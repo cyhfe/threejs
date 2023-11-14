@@ -19,6 +19,7 @@ export default function RootLayout({
     { href: "/", label: "note" },
     { href: "/basic", label: "basic" },
     { href: "/gltf", label: "gltf" },
+    { href: "/dominos", label: "dominos" },
   ];
   return (
     <html lang="en" className="h-full">
@@ -33,7 +34,7 @@ export default function RootLayout({
               );
             })}
           </div>
-          <div className="w-full h-full">{children}</div>
+          <div className="w-full h-full prose p-4">{children}</div>
         </div>
       </body>
     </html>
