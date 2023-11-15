@@ -33,3 +33,30 @@
 
 - THREE.LensFlare: This is not a light source, but with THREE.LensFlare, you can add
   a lens flare effect to the lights in your scene.
+
+## material
+
+- MeshBasicMaterial: This is a basic material that you can use to give your geometries a
+  simple color or show the wireframe of your geometries. This material isn’t influenced by lights.
+
+- MeshDepthMaterial: This is a material that uses the distance from the camera to determine
+  how to color your mesh.
+
+- MeshNormalMaterial: This is a simple material that bases the color of a face on its
+  normal vector.
+
+- MeshLambertMaterial: This is a material that takes lighting into account and is used to
+  create dull, non-shiny-looking objects.
+
+- MeshPhongMaterial: This is a material that also takes lighting into account and can be
+  used to create shiny objects.
+
+- MeshStandardMaterial: This is a material that uses physical-based rendering to render the
+  object. With physical-based rendering, a physically correct model is used to determine how light
+  interacts with a surface. This allows you to create more accurate and realistic-looking objects.
+
+- MeshPhysicalMaterial: This is an extension of MeshStandardMaterial that allows
+  more control over the reflection.
+
+- MeshToonMaterial: This is an extension of MeshPhongMaterial that tries to make
+  objects look hand-drawn.

@@ -94,10 +94,6 @@ async function init(container: HTMLDivElement) {
   container.appendChild(stats.dom);
 
   function animate() {
-    const time = performance.now() / 3000;
-
-    // directionalLight.position.x = Math.cos(time) * 2.5;
-    // directionalLight.position.z = Math.sin(time) * 2.5;
     stats.update();
     renderer.render(scene, camera);
   }
@@ -113,6 +109,7 @@ async function init(container: HTMLDivElement) {
   window.addEventListener("resize", handleResize);
   return () => {
     window.removeEventListener("resize", handleResize);
+    renderer.setAnimationLoop(null);
     gui.destroy();
   };
 }
