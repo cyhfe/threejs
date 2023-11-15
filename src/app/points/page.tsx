@@ -11,11 +11,11 @@ import Stats from "three/examples/jsm/libs/stats.module";
 const createPoints = () => {
   const points = [];
   const range = 15;
-  for (let i = 0; i < 1000000; i++) {
+  for (let i = 0; i < 100000; i++) {
     let particle = new THREE.Vector3(
-      Math.random() * range - range / 2,
-      Math.random() * range - range / 2,
-      Math.random() * range - range / 2
+      Math.random() * range,
+      Math.random() * range,
+      Math.random() * range
     );
 
     points.push(particle);
@@ -117,7 +117,7 @@ async function init(container: HTMLDivElement) {
 
   // camera
   const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
-  camera.position.set(15, 5, 15);
+  camera.position.set(25, 20, 25);
   scene.add(camera);
 
   // orbitControl
