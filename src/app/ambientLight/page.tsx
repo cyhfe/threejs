@@ -29,9 +29,9 @@ async function init(container: HTMLDivElement) {
   const guiAmbientLight = gui.addFolder("ambientLight");
 
   const guiAmbientLightProps = {
-    ambientLight: false,
-    color: "#ffffff",
-    intensity: 1,
+    ambientLight: true,
+    color: "#8f8f8f",
+    intensity: 10,
   };
 
   const guiHelpersProps = {
@@ -60,7 +60,10 @@ async function init(container: HTMLDivElement) {
   scene.add(camera);
 
   // ambientLight
-  const ambientLight = new THREE.AmbientLight(0xffffff);
+  const ambientLight = new THREE.AmbientLight(
+    guiAmbientLightProps.color,
+    guiAmbientLightProps.intensity
+  );
   guiAmbientLightProps.ambientLight && scene.add(ambientLight);
   guiAmbientLight
     .add(guiAmbientLightProps, "ambientLight")
@@ -72,7 +75,7 @@ async function init(container: HTMLDivElement) {
       }
     });
   guiAmbientLight
-    .add(guiAmbientLightProps, "intensity", 0, 5, 0.1)
+    .add(guiAmbientLightProps, "intensity", 0, 50, 0.1)
     .onChange((intensity: number) => {
       ambientLight.intensity = intensity;
     });
