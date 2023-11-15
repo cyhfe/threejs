@@ -19,22 +19,28 @@ async function init(container: HTMLDivElement) {
   const width = container.clientWidth;
   const height = container.clientHeight;
 
-  // gui
-  const gui = new GUI();
-
   // scene
   const scene = new THREE.Scene();
+
+  // gui
+  const gui = new GUI();
+  const guiProps = {
+    axesHelper: false,
+  };
+
+  // axis helper
+  const axesHelper = new THREE.AxesHelper(10);
+  gui.add(guiProps, "axesHelper").onChange((show: boolean) => {
+    if (show) {
+      scene.add(axesHelper);
+    } else {
+      scene.remove(axesHelper);
+    }
+  });
 
   // gltf
   const gltf = await loadWaterfall();
   scene.add(gltf.scene);
-
-  // model
-  // const gltf = await loadWaterfall();
-  // console.log(gltf);
-  // axis helper
-  const axesHelper = new THREE.AxesHelper(10);
-  scene.add(axesHelper);
 
   // mesh
 
