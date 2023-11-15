@@ -6,5 +6,30 @@
 
 ## light
 
-- ambientLight
-  环境光,均匀照亮场景,颜色会影响对象,不能投射阴影
+![light](/images/2.png)
+
+- THREE.AmbientLight: This is a basic light, the color of which is added to the current
+  color of the objects in the scene.
+
+- THREE.PointLight: This is a single point in space from which light spreads in all directions.
+  This light can be used to create shadows.
+
+- THREE.SpotLight: This light source has a cone-like effect like that of a desk lamp, a spotlight
+  in the ceiling, or a torch. This light can cast shadows.
+
+- THREE.DirectionalLight: This is also called infinite light. The light rays from this
+  light can be seen as parallel, similar to the light from the Sun. This light can also be used to
+  create shadows.
+
+- THREE.HemisphereLight: This is a special light and can be used to create more natural-
+  looking outdoor lighting by simulating a reflective surface and a faintly illuminating sky. This
+  light also doesn’t provide any shadow-related functionality.
+
+- THREE.RectAreaLight: With this light source, instead of a single point in space, you can
+  specify an area from which light emanates. THREE.RectAreaLight doesn’t cast any shadows.
+
+- THREE.LightProbe: This is a special kind of light source where, based on the environment
+  map used, a dynamic ambient light source is created to light the scene.
+
+- THREE.LensFlare: This is not a light source, but with THREE.LensFlare, you can add
+  a lens flare effect to the lights in your scene.
