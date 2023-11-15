@@ -24,13 +24,23 @@ async function init(container: HTMLDivElement) {
 
   // gui
   const gui = new GUI();
-  const guiProps = {
+
+  const guiAmbientLight = gui.addFolder("ambientLight");
+  const guiHelpers = gui.addFolder("helpers");
+
+  const guiAmbientLightProps = {
+    ambientLight: true,
+    color: "#ffffff",
+    intensity: 1,
+  };
+
+  const guiHelpersProps = {
     axesHelper: false,
   };
 
   // axis helper
   const axesHelper = new THREE.AxesHelper(10);
-  gui.add(guiProps, "axesHelper").onChange((show: boolean) => {
+  guiHelpers.add(guiHelpersProps, "axesHelper").onChange((show: boolean) => {
     if (show) {
       scene.add(axesHelper);
     } else {
@@ -49,9 +59,28 @@ async function init(container: HTMLDivElement) {
   camera.position.set(8, 8, 8);
   scene.add(camera);
 
-  // light
-  const ambientLight = new THREE.AmbientLight(0xffffff);
+  // ambientLight
+  const ambientLight = new THREE.AmbientLight(0xffffff, 2);
   scene.add(ambientLight);
+  guiAmbientLight
+    .add(guiAmbientLightProps, "ambientLight")
+    .onChange((addToScene: boolean) => {
+      if (addToScene) {
+        scene.add(ambientLight);
+      } else {
+        scene.remove(ambientLight);
+      }
+    });
+  guiAmbientLight
+    .add(guiAmbientLightProps, "intensity", 0, 5, 0.1)
+    .onChange((intensity: number) => {
+      ambientLight.intensity = intensity;
+    });
+  guiAmbientLight
+    .addColor(guiAmbientLightProps, "color")
+    .onChange((c: string) => {
+      ambientLight.color.setStyle(c);
+    });
 
   // const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
   // dirLight.position.set(0, 6, 4);
