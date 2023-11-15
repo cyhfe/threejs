@@ -23,6 +23,7 @@ export default function RootLayout({
     { href: "/ambientLight", label: "ambientLight" },
     { href: "/spotLight", label: "spotLight" },
     { href: "/directionalLight", label: "directionalLight" },
+    { href: "/3DText", label: "3DText" },
   ];
   return (
     <html lang="en" className="h-full">
