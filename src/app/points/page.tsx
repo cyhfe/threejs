@@ -35,7 +35,7 @@ const createPoints = () => {
   return geom;
 };
 
-export const createGhostTexture = () => {
+const createGhostTexture = () => {
   const canvas = document.createElement("canvas");
   canvas.width = 32;
   canvas.height = 32;
