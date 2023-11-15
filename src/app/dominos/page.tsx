@@ -3,8 +3,6 @@
 import React from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { RigidBodyDesc, RigidBodyType } from "@dimforge/rapier3d";
 
 import GUI from "lil-gui";
 //@ts-ignore
@@ -117,31 +115,106 @@ const createDominos = () => {
 };
 
 async function init(container: HTMLDivElement) {
+  const RAPIER = await import("@dimforge/rapier3d");
+
   const width = container.clientWidth;
   const height = container.clientHeight;
+
+  // gui
+  const gui = new GUI();
 
   // scene
   const scene = new THREE.Scene();
 
   // axis helper
-  const axesHelper = new THREE.AxesHelper(6);
-  scene.add(axesHelper);
+  // const axesHelper = new THREE.AxesHelper(6);
+  // scene.add(axesHelper);
+
+  const rapierFloor = (mesh: THREE.Mesh) => {
+    // description
+    const floorPosition = mesh.position;
+    const floorBodyDescription = new RAPIER.RigidBodyDesc(
+      RAPIER.RigidBodyType.Fixed
+    ).setTranslation(floorPosition.x, floorPosition.y, floorPosition.z);
+    // rigid body
+    const floorRigidBody = world.createRigidBody(floorBodyDescription);
+
+    // collider
+    const geometry = mesh.geometry as THREE.BoxGeometry;
+    const geometryParameters = geometry.parameters;
+    const floorColliderDesc = RAPIER.ColliderDesc.cuboid(
+      geometryParameters.width / 2,
+      geometryParameters.height / 2,
+      geometryParameters.depth / 2
+    );
+    const floorCollider = world.createCollider(
+      floorColliderDesc,
+      floorRigidBody
+    );
+    mesh.userData.rigidBody = floorRigidBody;
+    mesh.userData.collider = floorCollider;
+  };
+
+  const rapierDomino = (mesh: THREE.Mesh) => {
+    const stonePosition = mesh.position;
+    const stoneRotationQuaternion = new THREE.Quaternion().setFromEuler(
+      mesh.rotation
+    );
+
+    const dominoBodyDescription = new RAPIER.RigidBodyDesc(
+      RAPIER.RigidBodyType.Dynamic
+    )
+      .setTranslation(stonePosition.x, stonePosition.y, stonePosition.z)
+      .setRotation({
+        w: stoneRotationQuaternion.w,
+        x: stoneRotationQuaternion.x,
+        y: stoneRotationQuaternion.y,
+        z: stoneRotationQuaternion.z,
+      })
+      .setGravityScale(1)
+      .setCanSleep(false)
+      .setCcdEnabled(false);
+
+    const dominoRigidBody = world.createRigidBody(dominoBodyDescription);
+    const geometry = mesh.geometry as THREE.BoxGeometry;
+    const geometryParameters = geometry.parameters;
+    const dominoColliderDesc = RAPIER.ColliderDesc.cuboid(
+      geometryParameters.width / 2,
+      geometryParameters.height / 2,
+      geometryParameters.depth / 2
+    );
+    const dominoCollider = world.createCollider(
+      dominoColliderDesc,
+      dominoRigidBody
+    );
+
+    mesh.userData.rigidBody = dominoRigidBody;
+    mesh.userData.collider = dominoCollider;
+  };
 
   // physic
-  const RAPIER = await import("@dimforge/rapier3d");
-  const gravity = { x: 0.0, y: -9.81, z: -1 };
+  const gravity = { x: 0, y: -10, z: 0 };
+
+  gui.add(gravity, "x", -15, 15, 1);
+  gui.add(gravity, "y", -15, 15, 1);
+  gui.add(gravity, "z", -15, 15, 1);
   const world = new RAPIER.World(gravity);
 
   // mesh
   const arena = createArena();
+  //@ts-ignore
+  arena.children.forEach((mesh) => rapierFloor(mesh));
   scene.add(arena);
 
   const dominos = createDominos();
+  dominos.children[0].rotation.x = 0.2;
+  //@ts-ignore
+  dominos.children.forEach((mesh) => rapierDomino(mesh));
   scene.add(dominos);
 
   // camera
   const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-  camera.position.set(6, 6, 6);
+  camera.position.set(3, 3, 3);
   scene.add(camera);
 
   // light
@@ -175,11 +248,24 @@ async function init(container: HTMLDivElement) {
 
   let rafId: number | undefined;
   function animate() {
-    world.step();
     controller.update();
     stats.update();
     renderer.render(scene, camera);
     rafId = requestAnimationFrame(animate);
+
+    world.step();
+
+    const dominosGroup = scene.getObjectByName("dominos");
+    dominosGroup &&
+      dominosGroup.children.forEach((domino) => {
+        const dominoRigidBody = domino.userData.rigidBody;
+        const position = dominoRigidBody.translation();
+        const rotation = dominoRigidBody.rotation();
+        domino.position.set(position.x, position.y, position.z);
+        domino.rotation.setFromQuaternion(
+          new THREE.Quaternion(rotation.x, rotation.y, rotation.z, rotation.w)
+        );
+      });
   }
 
   animate();
