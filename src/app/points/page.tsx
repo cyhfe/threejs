@@ -7,8 +7,30 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import GUI from "lil-gui";
 //@ts-ignore
 import Stats from "three/examples/jsm/libs/stats.module";
-import { visitChildren } from "@/utils";
 
+const createPoints = () => {
+  const points = [];
+
+  for (let x = -15; x < 15; x++) {
+    for (let y = -10; y < 10; y++) {
+      let point = new THREE.Vector3(x / 4, y / 4, 0);
+      points.push(point);
+    }
+  }
+
+  const colors = new Float32Array(points.length * 3);
+  points.forEach((e, i) => {
+    const c = new THREE.Color(Math.random() * 0xffffff);
+    colors[i * 3] = c.r;
+    colors[i * 3 + 1] = c.g;
+    colors[i * 3 + 2] = c.b;
+  });
+
+  const geom = new THREE.BufferGeometry().setFromPoints(points);
+  geom.setAttribute("color", new THREE.BufferAttribute(colors, 3, true));
+
+  return geom;
+};
 async function init(container: HTMLDivElement) {
   const width = container.clientWidth;
   const height = container.clientHeight;
@@ -34,23 +56,35 @@ async function init(container: HTMLDivElement) {
   // axis helper
   const axesHelper = new THREE.AxesHelper(10);
   scene.add(axesHelper);
-  axesHelper.visible = false;
+  axesHelper.visible = true;
 
   // camera
-  const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 100);
+  const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
   camera.position.set(8, 10, -4);
   scene.add(camera);
 
   // orbitControl
   const orbitControl = new OrbitControls(camera, renderer.domElement);
-  orbitControl.minDistance = 5;
-  orbitControl.maxDistance = 30;
-  orbitControl.maxPolarAngle = Math.PI / 2;
+  // orbitControl.minDistance = 5;
+  // orbitControl.maxDistance = 30;
+  // orbitControl.maxPolarAngle = Math.PI / 2;
   orbitControl.update();
 
   // ambient
-  const ambient = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 0.5);
-  scene.add(ambient);
+  // const ambient = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 0.5);
+  // scene.add(ambient);
+
+  // points
+  // const material = new THREE.SpriteMaterial({ color: "red" });
+  // const sprite = new THREE.Sprite(material);
+  // scene.add(sprite);
+  const material = new THREE.PointsMaterial({
+    size: 0.1,
+    vertexColors: true,
+    color: 0xffffff,
+  });
+  const points = new THREE.Points(createPoints(), material);
+  scene.add(points);
 
   // gui
   const gui = new GUI();
