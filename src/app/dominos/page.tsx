@@ -285,6 +285,7 @@ async function init(container: HTMLDivElement) {
     window.removeEventListener("resize", handleResize);
     container.removeChild(renderer.domElement);
     container.removeChild(stats.dom);
+    gui.destroy();
   };
 }
 

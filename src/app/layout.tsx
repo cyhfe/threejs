@@ -22,6 +22,7 @@ export default function RootLayout({
     { href: "/dominos", label: "dominos" },
     { href: "/ambientLight", label: "ambientLight" },
     { href: "/spotLight", label: "spotLight" },
+    { href: "/directionalLight", label: "directionalLight" },
   ];
   return (
     <html lang="en" className="h-full">

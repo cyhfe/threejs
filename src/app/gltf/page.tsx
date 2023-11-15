@@ -8,21 +8,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import GUI from "lil-gui";
 //@ts-ignore
 import Stats from "three/examples/jsm/libs/stats.module";
-
-const visitChildren = (
-  object: THREE.Object3D,
-  fn: (object: THREE.Mesh) => void
-) => {
-  if (object.children && object.children.length > 0) {
-    for (const child of object.children) {
-      visitChildren(child, fn);
-    }
-  } else {
-    if (object.type === "Mesh") {
-      fn(object as THREE.Mesh);
-    }
-  }
-};
+import { visitChildren } from "@/utils";
 
 async function init(container: HTMLDivElement) {
   const width = container.clientWidth;
