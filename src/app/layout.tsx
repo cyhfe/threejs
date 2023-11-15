@@ -18,12 +18,12 @@ export default function RootLayout({
   const links = [
     { href: "/notes", label: "notes" },
     { href: "/basic", label: "basic" },
+    { href: "/3dText", label: "3dText" },
+    { href: "/ambientLight", label: "ambientLight" },
+    { href: "/directionalLight", label: "directionalLight" },
+    { href: "/spotLight", label: "spotLight" },
     { href: "/gltf", label: "gltf" },
     { href: "/dominos", label: "dominos" },
-    { href: "/ambientLight", label: "ambientLight" },
-    { href: "/spotLight", label: "spotLight" },
-    { href: "/directionalLight", label: "directionalLight" },
-    { href: "/3DText", label: "3DText" },
   ];
   return (
     <html lang="en" className="h-full">
