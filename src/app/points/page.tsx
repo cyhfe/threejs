@@ -117,7 +117,7 @@ async function init(container: HTMLDivElement) {
 
   // camera
   const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
-  camera.position.set(8, 10, -4);
+  camera.position.set(15, 5, 15);
   scene.add(camera);
 
   // orbitControl
