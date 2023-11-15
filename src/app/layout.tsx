@@ -20,6 +20,7 @@ export default function RootLayout({
     { href: "/basic", label: "basic" },
     { href: "/gltf", label: "gltf" },
     { href: "/dominos", label: "dominos" },
+    { href: "/ambientLight", label: "ambientLight" },
   ];
   return (
     <html lang="en" className="h-full">
