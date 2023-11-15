@@ -18,7 +18,7 @@ export default function RootLayout({
   const links = [
     { href: "/notes", label: "notes" },
     { href: "/basic", label: "basic" },
-    { href: "/3dText", label: "3dText" },
+    { href: "/text", label: "text" },
     { href: "/gltf", label: "gltf" },
     { href: "/ambientLight", label: "ambientLight" },
     { href: "/directionalLight", label: "directionalLight" },
