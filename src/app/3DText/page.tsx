@@ -3,10 +3,39 @@
 import React from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { PLYLoader } from "three/addons/loaders/PLYLoader.js";
+import { FontLoader } from "three/addons/loaders/FontLoader.js";
+import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
+
 import GUI from "lil-gui";
 //@ts-ignore
 import Stats from "three/examples/jsm/libs/stats.module";
+
+const content = `
+永和九年岁在癸丑暮春之初会于
+会稽山阴之兰亭修禊事也群贤毕
+至少长咸集此地有崇山峻岭茂林
+修竹又有清流激湍映带左右引以
+为流觞曲水列坐其次虽无丝竹管
+弦之盛一觞一咏亦足以畅叙幽情
+是日也天朗气清惠风和畅仰观宇
+宙之大俯察品类之盛所以游目骋
+怀足以极视听之娱信可乐也夫人
+之相与俯仰一世或取诸怀抱晤言
+一室之内或因寄所托放浪形骸之
+外虽取舍万殊静躁不同当其欣于
+所遇暂得于己快然自足不知老之
+将至及其所之既倦情随事迁感慨
+系之矣向之所欣俯仰之间已为陈
+迹犹不能不以之兴怀况修短随化
+终期于尽古人云死生亦大矣岂不
+痛哉每览昔人兴感之由若合一契
+未尝不临文嗟悼不能喻之于怀固
+知一死生为虚诞齐彭殇为妄作后
+之视今亦犹今之视昔悲夫故列叙
+时人录其所述虽世殊事异所以兴
+怀其致一也后之览者亦将有感于
+斯文
+`;
 
 async function init(container: HTMLDivElement) {
   const width = container.clientWidth;
@@ -28,186 +57,68 @@ async function init(container: HTMLDivElement) {
 
   // scene
   const scene = new THREE.Scene();
+  // scene.background = new THREE.Color(0x000000);
 
   // axis helper
-  const axesHelper = new THREE.AxesHelper(6);
+  const axesHelper = new THREE.AxesHelper(1000);
   scene.add(axesHelper);
   axesHelper.visible = false;
 
   // camera
-  const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-  camera.position.set(7, 4, 1);
+  const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 10000);
+  camera.position.set(300, 0, 1200);
   scene.add(camera);
 
   // orbitControl
   const orbitControl = new OrbitControls(camera, renderer.domElement);
-  orbitControl.minDistance = 2;
-  orbitControl.maxDistance = 10;
+  // orbitControl.minDistance = 2;
+  // orbitControl.maxDistance = 10;
   orbitControl.maxPolarAngle = Math.PI / 2;
-  orbitControl.target.set(0, 1, 0);
-  orbitControl.update();
+  // orbitControl.target.set(10, 0, 0);
+  // orbitControl.autoRotate = true;
 
   // ambient
-  const ambient = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 0.15);
-  scene.add(ambient);
+  // const ambient = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 0.15);
+  // scene.add(ambient);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.4);
+  dirLight.position.set(0, 0, 1).normalize();
+  scene.add(dirLight);
 
-  // textures
-  const loader = new THREE.TextureLoader().setPath("/assets/textures/");
-  const filenames = ["disturb.jpg", "colors.png", "uv_grid_opengl.jpg"];
+  const pointLight = new THREE.PointLight(0xffffff, 4.5, 0, 0);
+  pointLight.color.setHSL(Math.random(), 1, 0.5);
+  pointLight.position.set(0, 100, 90);
+  scene.add(pointLight);
 
-  const textures: { [key: string]: THREE.Texture | null } = {
-    none: null,
-  };
+  // load font
+  const fontLoader = new FontLoader();
+  const textureLoader = new THREE.TextureLoader();
+  fontLoader.load("/assets/fonts/SCFwxz_Regular.json", (font) => {
+    const textGeometry = new TextGeometry(content, {
+      font: font,
+      size: 20,
+      height: 5,
+      curveSegments: 12,
+      bevelEnabled: false,
+      bevelThickness: 10,
+      bevelSize: 8,
+      bevelOffset: 0,
+      bevelSegments: 5,
+    });
+    textGeometry.center();
 
-  for (let i = 0; i < filenames.length; i++) {
-    const filename = filenames[i];
+    const matcapTexture = textureLoader.load("/assets/textures/matcaps/2.png");
+    const textMaterial = new THREE.MeshMatcapMaterial({
+      matcap: matcapTexture,
+    });
 
-    const texture = loader.load(filename);
-    texture.minFilter = THREE.LinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-    texture.colorSpace = THREE.SRGBColorSpace;
-
-    textures[filename] = texture;
-  }
-
-  // spotLight
-  const spotLight = new THREE.SpotLight(0xffffff, 100);
-  spotLight.position.set(2.5, 5, 2.5);
-  spotLight.angle = Math.PI / 6;
-  spotLight.penumbra = 1;
-  spotLight.decay = 2;
-  spotLight.distance = 0;
-  spotLight.map = textures["none"];
-
-  spotLight.castShadow = true;
-  spotLight.shadow.mapSize.width = 1024;
-  spotLight.shadow.mapSize.height = 1024;
-  spotLight.shadow.camera.near = 1;
-  spotLight.shadow.camera.far = 10;
-  spotLight.shadow.focus = 1;
-  scene.add(spotLight);
-
-  const lightHelper = new THREE.SpotLightHelper(spotLight);
-  scene.add(lightHelper);
-  lightHelper.visible = true;
-
-  // ground
-  const geometry = new THREE.PlaneGeometry(200, 200);
-  const material = new THREE.MeshLambertMaterial({ color: 0xbcbcbc });
-
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.set(0, -1, 0);
-  mesh.rotation.x = -Math.PI / 2;
-  mesh.receiveShadow = true;
-  scene.add(mesh);
-
-  // load model
-  new PLYLoader().load("assets/models/ply/Lucy100k.ply", function (geometry) {
-    geometry.scale(0.0024, 0.0024, 0.0024);
-    geometry.computeVertexNormals();
-
-    const material = new THREE.MeshLambertMaterial();
-
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.y = -Math.PI / 2;
-    mesh.position.y = 0.8;
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    scene.add(mesh);
+    const text = new THREE.Mesh(textGeometry, textMaterial);
+    text.castShadow = true;
+    text.receiveShadow = true;
+    scene.add(text);
   });
 
   // gui
   const gui = new GUI();
-
-  const params = {
-    map: null,
-    spotLight: spotLight.visible,
-    color: spotLight.color.getHex(),
-    intensity: spotLight.intensity,
-    distance: spotLight.distance,
-    angle: spotLight.angle,
-    penumbra: spotLight.penumbra,
-    decay: spotLight.decay,
-    focus: spotLight.shadow.focus,
-    shadows: true,
-    hemisphereLight: ambient.visible,
-    skyColor: ambient.color.getHex(),
-    groundColor: ambient.groundColor.getHex(),
-    hmIndensity: ambient.intensity,
-    axesHelper: axesHelper.visible,
-    lightHelper: lightHelper.visible,
-  };
-
-  gui.add(params, "spotLight").onChange(function (val: boolean) {
-    spotLight.visible = val;
-  });
-
-  gui.add(params, "map", textures).onChange(function (val: THREE.Texture) {
-    spotLight.map = val;
-  });
-
-  gui.addColor(params, "color").onChange(function (val: number) {
-    spotLight.color.setHex(val);
-  });
-
-  gui.add(params, "intensity", 0, 500).onChange(function (val: number) {
-    spotLight.intensity = val;
-  });
-
-  gui.add(params, "distance", 50, 200).onChange(function (val: number) {
-    spotLight.distance = val;
-  });
-
-  gui.add(params, "angle", 0, Math.PI / 3).onChange(function (val: number) {
-    spotLight.angle = val;
-  });
-
-  gui.add(params, "penumbra", 0, 1).onChange(function (val: number) {
-    spotLight.penumbra = val;
-  });
-
-  gui.add(params, "decay", 1, 2).onChange(function (val: number) {
-    spotLight.decay = val;
-  });
-
-  gui.add(params, "focus", 0, 1).onChange(function (val: number) {
-    spotLight.shadow.focus = val;
-  });
-
-  gui.add(params, "shadows").onChange(function (val: boolean) {
-    renderer.shadowMap.enabled = val;
-    scene.traverse(function (child) {
-      // @ts-ignore
-      if (child.material) {
-        // @ts-ignore
-        child.material.needsUpdate = true;
-      }
-    });
-  });
-
-  gui.add(params, "hemisphereLight").onChange(function (val: boolean) {
-    ambient.visible = val;
-  });
-
-  gui.addColor(params, "skyColor").onChange(function (val: number) {
-    ambient.color.setHex(val);
-  });
-
-  gui.addColor(params, "groundColor").onChange(function (val: number) {
-    ambient.groundColor.setHex(val);
-  });
-
-  gui.add(params, "hmIndensity", 0, 3).onChange(function (val: number) {
-    ambient.intensity = val;
-  });
-
-  gui.add(params, "axesHelper").onChange(function (val: boolean) {
-    axesHelper.visible = val;
-  });
-
-  gui.add(params, "lightHelper").onChange(function (val: boolean) {
-    lightHelper.visible = val;
-  });
 
   // Stats
   const stats = new Stats();
@@ -215,13 +126,6 @@ async function init(container: HTMLDivElement) {
   container.appendChild(stats.dom);
 
   function animate() {
-    const time = performance.now() / 3000;
-
-    spotLight.position.x = Math.cos(time) * 2.5;
-    spotLight.position.z = Math.sin(time) * 2.5;
-
-    lightHelper.update();
-
     stats.update();
     renderer.render(scene, camera);
   }
