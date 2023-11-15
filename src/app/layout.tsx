@@ -24,6 +24,7 @@ export default function RootLayout({
     { href: "/spotLight", label: "spotLight" },
     { href: "/gltf", label: "gltf" },
     { href: "/dominos", label: "dominos" },
+    { href: "/points", label: "points" },
   ];
   return (
     <html lang="en" className="h-full">

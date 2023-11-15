@@ -237,6 +237,7 @@ async function init(container: HTMLDivElement) {
   window.addEventListener("resize", handleResize);
   return () => {
     window.removeEventListener("resize", handleResize);
+    renderer.setAnimationLoop(null);
     gui.destroy();
   };
 }

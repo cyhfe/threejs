@@ -52,39 +52,6 @@ async function init(container: HTMLDivElement) {
   const ambient = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 0.5);
   scene.add(ambient);
 
-  // directional light
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  directionalLight.position.set(10, 14, 5);
-  directionalLight.castShadow = true;
-  directionalLight.intensity = 1.5;
-  directionalLight.shadow.camera.near = 1;
-  directionalLight.shadow.camera.far = 25;
-  directionalLight.shadow.camera.left = -10;
-  directionalLight.shadow.camera.right = 10;
-  directionalLight.shadow.camera.top = 10;
-  directionalLight.shadow.camera.bottom = -10;
-
-  directionalLight.shadow.mapSize.width = 1024;
-  directionalLight.shadow.mapSize.height = 1024;
-  directionalLight.shadow.bias = -0.03;
-  scene.add(directionalLight);
-  const helper = new THREE.DirectionalLightHelper(directionalLight, 5);
-  scene.add(helper);
-  helper.visible = false;
-
-  // load model
-  new GLTFLoader().load("/assets/gltf/waterfall/scene.gltf", (gltf) => {
-    const loadedScene = gltf.scene;
-    loadedScene.rotation.y = Math.PI / 2;
-    visitChildren(loadedScene, (child) => {
-      if (child instanceof THREE.Mesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
-      }
-    });
-    scene.add(gltf.scene);
-  });
-
   // gui
   const gui = new GUI();
 
