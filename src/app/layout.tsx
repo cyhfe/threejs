@@ -19,10 +19,10 @@ export default function RootLayout({
     { href: "/notes", label: "notes" },
     { href: "/basic", label: "basic" },
     { href: "/3dText", label: "3dText" },
+    { href: "/gltf", label: "gltf" },
     { href: "/ambientLight", label: "ambientLight" },
     { href: "/directionalLight", label: "directionalLight" },
     { href: "/spotLight", label: "spotLight" },
-    { href: "/gltf", label: "gltf" },
     { href: "/dominos", label: "dominos" },
   ];
   return (
