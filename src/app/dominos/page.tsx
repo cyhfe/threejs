@@ -193,7 +193,7 @@ async function init(container: HTMLDivElement) {
   };
 
   // physic
-  const gravity = { x: 0, y: -10, z: 0 };
+  const gravity = { x: 0, y: -9.8, z: 0 };
 
   gui.add(gravity, "x", -15, 15, 1);
   gui.add(gravity, "y", -15, 15, 1);
