@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-
+import Script from "next/script";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -28,6 +28,10 @@ export default function RootLayout({
   ];
   return (
     <html lang="en" className="h-full">
+      <Script
+        src="https://cdn.jsdelivr.net/npm/@cyhfe/tracker@0.0.6/dist/tracker.js"
+        data-wid="f34aa32f-3ac5-423c-b311-92424ce47ec7"
+      ></Script>
       <body className={inter.className + " h-full"}>
         <div className="flex h-full ">
           <div className="border shadow-inner w-44 shrink-0	p-4 fixed top-0 bottom-0">
