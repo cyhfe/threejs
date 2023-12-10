@@ -12,6 +12,8 @@ const nextConfig = {
     config.experiments.syncWebAssembly = true;
     return config;
   },
+
+  output: "standalone",
 };
 
 const withMDX = createMDX({
