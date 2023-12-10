@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <Script
-        src="https://cdn.jsdelivr.net/npm/@cyhfe/tracker@0.0.6/dist/tracker.js"
+        src="https://cdn.jsdelivr.net/npm/@cyhfe/tracker@0.0.9/dist/tracker.js"
         data-wid="f34aa32f-3ac5-423c-b311-92424ce47ec7"
       ></Script>
       <body className={inter.className + " h-full"}>
